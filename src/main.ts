@@ -1,13 +1,12 @@
 import * as core from '@actions/core'
-import * as github from '@actions/github'
+import { context, getOctokit } from '@actions/github'
 
 async function run(): Promise<void> {
   try {
     const token = (core.getInput('github_token') ||
       process.env.GITHUB_TOKEN) as string
 
-    const octokit = new github.GitHub(token)
-    const context = github.context
+    const octokit = getOctokit(token)
 
     const ref = core.getInput('ref') || context.ref
 
@@ -16,7 +15,7 @@ async function run(): Promise<void> {
       ref
     })
   } catch (error) {
-    core.setFailed(error.message)
+    // already deleted, just ignore it
   }
 }
 
